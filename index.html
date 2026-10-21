@@ -1,9 +1,12 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Word Bakery - Verified 100 Levels</title>
+  <!-- Browser favicon (SVG Data URI depicting a cute chef hat and cookie) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥖</text></svg>">
   <style>
     :root {
       --bg-wood: #5a2e12;
@@ -54,6 +57,80 @@
       position: relative;
       box-shadow: 0 0 30px rgba(0,0,0,0.8);
       padding: calc(8px + env(safe-area-inset-top, 0px)) 12px calc(24px + env(safe-area-inset-bottom, 0px)) 12px;
+      overflow: hidden;
+    }
+
+    /* Splash Screen Overlay */
+    #splash-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #210d04;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 40px;
+      transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+    }
+
+    #splash-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .splash-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-rendering: auto;
+      filter: none !important;
+      -webkit-filter: none !important;
+    }
+
+    .splash-overlay-content {
+      position: relative;
+      z-index: 1001;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 24px;
+    }
+
+    .start-btn {
+      width: 100%;
+      max-width: 280px;
+      padding: 16px 0;
+      background: linear-gradient(180deg, #ffca28 0%, #f57f17 100%);
+      border: 4px solid #fff8e1;
+      border-radius: 30px;
+      box-shadow: 0 6px 0 #b26a00, 0 10px 20px rgba(0,0,0,0.4);
+      color: #3e2723;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      animation: pulseBtn 2s infinite ease-in-out;
+    }
+
+    .start-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #b26a00, 0 5px 10px rgba(0,0,0,0.4);
+    }
+
+    @keyframes pulseBtn {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
     }
 
     /* Header */
@@ -341,6 +418,14 @@
 <body>
 
 <div id="game-wrapper">
+  <!-- Crystal-Clear Splash Screen with Start Button -->
+  <div id="splash-screen">
+    <img src="1792580768818.jpeg" alt="Word Bakery Splash Screen" class="splash-image" onerror="this.src='https://placehold.co/480x850/5a2e12/ffffff?text=Word+Bakery';">
+    <div class="splash-overlay-content">
+      <button class="start-btn" onclick="startGame()">START GAME</button>
+    </div>
+  </div>
+
   <!-- Header -->
   <div class="header">
     <div class="header-actions">
@@ -501,7 +586,7 @@ const PUZZLES_100 = [
   { letters: ["S","H","E","R","B","E","T"], words: ["SHERBET","SHEER","REST"] },
   { letters: ["C","U","S","T","A","R","D"], words: ["CUSTARD","CRUST","STAR"] },
   { letters: ["P","A","V","L","O","V","A"], words: ["PAVLOVA","LAVA","OVAL"] },
-  { letters: ["S","O","U","F","F","L","E"], words: ["SOUFFLE","FLUE","LUES"] }, // Level 97 Fixed: LUES replaces LESS
+  { letters: ["S","O","U","F","F","L","E"], words: ["SOUFFLE","FLUE","LUES"] },
   { letters: ["B","A","K","I","N","G"], words: ["BAKING","GAIN","BANK"] },
   { letters: ["B","A","T","T","E","R"], words: ["BATTER","TABER","BEAT"] }
 ];
@@ -559,6 +644,13 @@ const panCanvas = document.getElementById('pan-canvas');
 const ctx = panCanvas.getContext('2d');
 const lettersLayer = document.getElementById('letters-layer');
 const previewBanner = document.getElementById('preview-banner');
+
+function startGame() {
+  const splash = document.getElementById('splash-screen');
+  splash.classList.add('hidden');
+  initAudio();
+  loadLevel(0);
+}
 
 function loadLevel(idx) {
   currentLevelIdx = idx % ALL_100_LEVELS.length;
@@ -806,7 +898,10 @@ function shuffleLetters() {
 function buyHint(type) {
   const cost = type === 'single' ? 25 : 60;
   if (coins < cost) {
-    alert("Not enough coins! Click +100 💰");
+    const modalCard = document.querySelector('.modal-card');
+    if (modalCard) {
+      openModal("Need More Coins!", "You don't have enough coins for this hint. Click +100 💰 in the top bar!", "OK");
+    }
     return;
   }
 
@@ -857,8 +952,6 @@ function closeModal() {
   if (modalCallback) modalCallback();
 }
 
-function toggleSound() {}
-
 panContainer.addEventListener('mousedown', handleStart);
 window.addEventListener('mousemove', handleMove);
 window.addEventListener('mouseup', handleEnd);
@@ -874,8 +967,7 @@ window.addEventListener('resize', () => {
     setupPan(level);
   }
 });
-
-loadLevel(0);
 </script>
 </body>
 </html>
+```
