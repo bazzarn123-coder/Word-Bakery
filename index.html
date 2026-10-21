@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -165,16 +166,6 @@
       background: linear-gradient(180deg, #e53935 0%, #b71c1c 100%);
       border-color: #ff8a80;
       box-shadow: 0 4px 0 #6a0000;
-      padding: 0 8px;
-      width: auto;
-      font-weight: bold;
-      font-size: 12px;
-    }
-
-    .coin-cheat-btn {
-      background: linear-gradient(180deg, #43a047 0%, #2e7d32 100%);
-      border-color: #a5d6a7;
-      box-shadow: 0 4px 0 #1b5e20;
       padding: 0 8px;
       width: auto;
       font-weight: bold;
@@ -429,7 +420,6 @@
   <div class="header">
     <div class="header-actions">
       <div class="icon-btn skip-btn" onclick="skipLevel()">⏭️ SKIP</div>
-      <div class="icon-btn coin-cheat-btn" onclick="addCoins()">+100 💰</div>
     </div>
     <div class="level-title-container">
       <div class="level-category" id="level-category">Milk 01</div>
@@ -879,12 +869,6 @@ function checkLevelCompletion() {
 
 function skipLevel() { loadLevel(currentLevelIdx + 1); }
 
-function addCoins() {
-  coins += 100;
-  document.getElementById('coin-count').innerText = coins;
-  soundExtra();
-}
-
 function shuffleLetters() {
   const level = ALL_100_LEVELS[currentLevelIdx];
   for (let i = level.letters.length - 1; i > 0; i--) {
@@ -897,7 +881,7 @@ function shuffleLetters() {
 function buyHint(type) {
   const cost = type === 'single' ? 25 : 60;
   if (coins < cost) {
-    openModal("Need More Coins!", "You don't have enough coins for this hint. Click +100 💰 in the top bar!", "OK");
+    openModal("Need More Coins!", "You don't have enough coins for this hint. Find extra words to earn more coins!", "OK");
     return;
   }
 
@@ -966,3 +950,4 @@ window.addEventListener('resize', () => {
 </script>
 </body>
 </html>
+```
